@@ -21,12 +21,12 @@
 #define in3_motor_b 5
 #define in4_motor_b 6
 
-RT_TASK serial_communication_task
-RT_TASK converter_task
-RT_TASK pwm_motor_a_task
-RT_TASK pwm_motor_b_task
-RT_TASK dir_motor_a_task
-RT_TASK dir_motor_b_task
+RT_TASK serial_communication_task;
+RT_TASK converter_task;
+RT_TASK pwm_motor_a_task;
+RT_TASK pwm_motor_b_task;
+RT_TASK dir_motor_a_task;
+RT_TASK dir_motor_b_task;
 
 RT_SEM semPosition;
 RT_SEM semMotorA;
