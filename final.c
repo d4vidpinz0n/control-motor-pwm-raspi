@@ -14,12 +14,12 @@
 
 #include  <rtdk.h>
 
-#define pin_pwm_motor_a 1
-#define pin_pwm_motor_b 2
-#define in1_motor_a 3
-#define in2_motor_a 4
-#define in3_motor_b 5
-#define in4_motor_b 6
+#define pin_pwm_motor_a 0
+#define pin_pwm_motor_b 1
+#define in1_motor_a 2
+#define in2_motor_a 3
+#define in3_motor_b 4
+#define in4_motor_b 5
 
 RT_TASK serial_communication_task;
 RT_TASK converter_task;
@@ -156,9 +156,14 @@ void converter_function(void *arg){
       if(x>45){
         potA = 0;
       }else{
-        potA = potB*(-1.0*x/45.0+1.0);
+        potA = potA*(-1.0*x/45.0+1.0);
       }
     }
+
+    dirA=0;
+    dirB=0;
+    potA = 0.5;
+    potB = 0.5;
     
     //waiting for period time
     rt_task_wait_period(NULL);
