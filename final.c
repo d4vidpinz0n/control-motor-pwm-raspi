@@ -80,7 +80,7 @@ void serial_communication_function(void *arg){
       }
     }
     /* Now, wait for a semaphore unit... */
-    rt_sem_p(&semPositio,TM_INFINITE);
+    rt_sem_p(&semPosition,TM_INFINITE);
 
     for(i=0;i<64;i++){
       position[i] = msg[i];
@@ -111,7 +111,7 @@ void converter_function(void *arg){
   while(1){
 
     /* Now, wait for a semaphore unit... */
-    rt_sem_p(&semPositio,TM_INFINITE);
+    rt_sem_p(&semPosition,TM_INFINITE);
 
     for(i=0;i<64;i++){
       positionTemp[i] = position[i];
@@ -179,11 +179,12 @@ void dir_motor_function(void *arg){
     in_2 = in4_motor_b;
   }
   if (dir==0){//forward
-      digitalWrite(in_1,HIGH);
-      digitalWrite(in_2,LOW);
-    }else{//backward
-      digitalWrite(in_1,LOW);
-      digitalWrite(in_2,HIGH);
+    digitalWrite(in_1,HIGH);
+    digitalWrite(in_2,LOW);
+  }else{//backward
+    digitalWrite(in_1,LOW);
+    digitalWrite(in_2,HIGH);
+  }
 }
 
 //aplica PWM a la salida que controla la potencia del motor
