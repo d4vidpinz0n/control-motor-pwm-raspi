@@ -47,7 +47,7 @@ void serial_communication_function(void *arg){
   // HARDWARE_UART "/dev/ttyAMA0"
   char device[]= "/dev/ttyUSB0";
   // filedescriptor
-  int fd;
+  int fd,err,i;
   unsigned long baud = 9600;
   unsigned long time=0;
 
@@ -65,7 +65,7 @@ void serial_communication_function(void *arg){
   }
 
   int length,index;
-  char msg[64],newchar;
+  char msg[64],newChar;
 
   //loop of the periodic task
   while(1){
@@ -80,14 +80,14 @@ void serial_communication_function(void *arg){
       }
     }
     /* Now, wait for a semaphore unit... */
-    rt_sem_p(&semPossitio,TM_INFINITE);
+    rt_sem_p(&semPositio,TM_INFINITE);
 
-    for(int i=0;i<64;i++){
+    for(i=0;i<64;i++){
       position[i] = msg[i];
     }
 
     /* then release it. */
-    rt_sem_v(&semGPosition,TM_INFINITE);
+    rt_sem_v(&semPosition);
 
     //waiting for period time
     rt_task_wait_period(NULL);
@@ -97,6 +97,7 @@ void serial_communication_function(void *arg){
 //obtiene la potencia para cada motor y su direccion
 void converter_function(void *arg){
   char positionTemp[64];
+  int err,i;
   float x,y; //x -> girar, y -> avanzar
   //x negativo -> a la derecha, y negativo -> hacia delante
 
@@ -110,14 +111,14 @@ void converter_function(void *arg){
   while(1){
 
     /* Now, wait for a semaphore unit... */
-    rt_sem_p(&semPossitio,TM_INFINITE);
+    rt_sem_p(&semPositio,TM_INFINITE);
 
-    for(int i=0;i<64;i++){
+    for(i=0;i<64;i++){
       positionTemp[i] = position[i];
     }
 
     /* then release it. */
-    rt_sem_v(&semGPosition,TM_INFINITE);
+    rt_sem_v(&semPosition);
 
     //converting position string to float
     sscanf (positionTemp,"%f %f",&x,&y);
@@ -187,7 +188,7 @@ void dir_motor_function(void *arg){
 
 //aplica PWM a la salida que controla la potencia del motor
 void pwm_motor_function(void *arg) {
-  int motor = *(int*)arg, pin;
+  int motor = *(int*)arg, pin,err;
   float pot;
 
   //setting the task periodic
@@ -202,24 +203,25 @@ void pwm_motor_function(void *arg) {
     
     if (motor==1){
       pot = potA;
-      pin = pin_pwm_motor_a
+      pin = pin_pwm_motor_a;
     }else{
       pot = potB;
-      pin = pin_pwm_motor_b
+      pin = pin_pwm_motor_b;
     }
     //set_data_out has offset 0x94
     //set gpio pin to 1 (up)
     digitalWrite(pin,HIGH);
     // wait requested pulse width time (duty)
-    rt_task_sleep(pot*0.2*one_second)
+    rt_task_sleep(pot*0.2*one_second);
 
     //clear_data_out has offset 0x90
     //set gpio pin to 0 (down)
     digitalWrite(pin,LOW);
 
     // wait until the next pulse should start (20mS interval)
-    rt_task_wait_period(NULL)
+    rt_task_wait_period(NULL);
   }
+}
 
 //startup code
 void startup(){
