@@ -121,7 +121,7 @@ void converter_function(void *arg){
     rt_sem_v(&semPosition);
 
     //converting position string to float
-    sscanf (positionTemp,"%f %f",&x,&y);
+    sscanf (positionTemp,"A%f %f*",&x,&y);
 
     if (y<0){
       dirA = 0;
