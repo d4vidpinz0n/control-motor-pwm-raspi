@@ -85,8 +85,9 @@ void serial_communication_function(void *arg){
     for(i=0;i<64;i++){
       position[i] = msg[i];
     }
-
-    /* then release it. */
+    //to watch position in console
+    rt_printf("%s\n",position);
+    // then release it. //
     rt_sem_v(&semPosition);
 
     //waiting for period time
